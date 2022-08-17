@@ -25,7 +25,7 @@ int main()
         // Check that vertices are under numberOfVertices, cut is bigger than 0.
         cin >> startVertex >> endVertex >> cut;
 
-        graphFromUser.AddEdge(startVertex, endVertex, cut);
+        graphFromUser.addEdge(startVertex, endVertex, cut);
     }
 
     // Build FlowNetwork

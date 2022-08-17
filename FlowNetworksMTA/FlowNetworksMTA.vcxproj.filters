@@ -21,7 +21,7 @@
     <ClCompile Include="DirectedGraph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AdjacencyNode.cpp">
+    <ClCompile Include="Edge.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,7 +29,7 @@
     <ClInclude Include="DirectedGraph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AdjacencyNode.h">
+    <ClInclude Include="Edge.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

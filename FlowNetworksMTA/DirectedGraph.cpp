@@ -1,23 +1,28 @@
 #include "DirectedGraph.h"
 
-void DirectedGraph::MakeEmptyGraph(int i_NumberOfVertices)
+void DirectedGraph::makeEmptyGraph(int numberOfVertices)
 {
-
+	adjLists.resize(numberOfVertices);
 }
 
-AdjacencyNode* DirectedGraph::GetAdjList(int i_Vertex)
+std::list<int> DirectedGraph::getAdjList(int vertex)
 {
-	list<AdjacencyNode*>::iterator iterator = m_GraphNodesList.begin();
-	advance(iterator, i_Vertex);
-	return *iterator;
+	std::list<int> adjList;
+	for (auto& edge : adjLists[vertex])
+	{
+		adjList.push_back(edge.getEnd());
+	}
+	adjList.sort();
+	return adjList;
 }
 
-void DirectedGraph::AddEdge(int i_StartVertex, int i_EndVertex, int i_Cut)
+void DirectedGraph::addEdge(int startVertex, int endVertex, int cut)
 {
-	
+	adjLists[startVertex].push_back(Edge(startVertex, endVertex, 0, cut));
 }
 
-void DirectedGraph::RemoveEdge(int i_StartVertex, int i_EndVertex)
+void DirectedGraph::removeEdge(int startVertex, int endVertex)
 {
-	
+	std::vector<Edge> adjList = adjLists[startVertex];
+	adjList.erase(std::remove_if(adjList.begin(), adjList.end(), [&](Edge x) {return x.getEnd() == endVertex; }), adjList.end());
 }
