@@ -32,15 +32,7 @@ void DirectedGraph::removeEdge(int startVertex, int endVertex)
 void DirectedGraph::runBFS(int s, vector<int>& d, vector<int>& p)
 {
 	queue<int> Q;
-	int numberOfVertices = adjLists.size();
-	d.resize(numberOfVertices);
-	p.resize(numberOfVertices);
-	for (int i = 0; i < numberOfVertices; i++)
-	{
-		d[i] = INT32_MAX;
-		p[i] = NULL;
-	}
-
+	formatDandP(d, p, adjLists.size());
 	Q.push(s);
 	d[s] = 0;
 	while(!Q.empty())
@@ -57,4 +49,70 @@ void DirectedGraph::runBFS(int s, vector<int>& d, vector<int>& p)
 			}
 		}
 	}
+}
+
+void DirectedGraph::formatDandP(vector<int>& d, vector<int>& p, int numberOfVertices)
+{
+	d.resize(numberOfVertices);
+	p.resize(numberOfVertices);
+	for (int i = 0; i < numberOfVertices; i++)
+	{
+		d[i] = INT32_MAX;
+		p[i] = -1;
+	}
+}
+
+void DirectedGraph::fordFalkersonUsingBFS(int s, int t)
+{
+	vector<int> d, p;
+	int numberOfVertices = adjLists.size();
+	d.resize(numberOfVertices);
+	p.resize(numberOfVertices);
+	runBFS(s, d, p);
+	while(d[t] != INT32_MAX)
+	{
+		// Find minimal Cut-Flow
+		// Add that minimal to all flows
+		int kibulShiuri = getKibulShiuri(d, p, t);
+		updateEdgesKibulShiuri(kibulShiuri, p, t);
+		formatDandP(d, p, adjLists.size());
+	}
+}
+
+int DirectedGraph::getKibulShiuri(vector<int>& d, vector<int>& p, int t)
+{
+	int startVertex = p[t];
+	int endVertex = t;
+	int minimumKibulShiuri = INT32_MAX;
+	while (startVertex != -1)
+	{
+		int kibulShiuri = getEdgeFromGraph(startVertex, endVertex).getCut() - getEdgeFromGraph(startVertex, endVertex).getFlow();
+		if (kibulShiuri < minimumKibulShiuri)
+		{
+			minimumKibulShiuri = kibulShiuri;
+		}
+		endVertex = startVertex;
+		startVertex = p[startVertex];
+	}
+
+	return minimumKibulShiuri;
+}
+
+void DirectedGraph::updateEdgesKibulShiuri(int kibulShiuri, vector<int>& p, int t)
+{
+	
+}
+
+Edge& DirectedGraph::getEdgeFromGraph(int startVertex, int endVertex)
+{
+	int numberOfNeighbors = adjLists[startVertex].size();
+	Edge* edgeToReturn = nullptr;
+	for(int i=0; i<numberOfNeighbors; i++)
+	{
+		if(adjLists[startVertex][i].getEnd() == endVertex)
+		{
+			edgeToReturn = &adjLists[startVertex][i];
+		}
+	}
+	return *edgeToReturn;
 }

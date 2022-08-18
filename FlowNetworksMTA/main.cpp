@@ -33,6 +33,7 @@ int main()
     vector<int> d, p;
 
     graphFromUser.runBFS(0, d, p);
+    graphFromUser.fordFalkersonUsingBFS(0, 5);
 
     cout << "TEST DELETE" << endl;
 
