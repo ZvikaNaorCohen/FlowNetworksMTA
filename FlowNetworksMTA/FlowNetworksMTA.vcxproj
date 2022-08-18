@@ -139,12 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AdjacencyNode.cpp" />
+    <ClCompile Include="Edge.cpp" />
     <ClCompile Include="DirectedGraph.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AdjacencyNode.h" />
+    <ClInclude Include="Edge.h" />
     <ClInclude Include="DirectedGraph.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
