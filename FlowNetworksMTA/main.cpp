@@ -1,32 +1,71 @@
 #include <iostream>
-
 #include "DirectedGraph.h"
+#include "Utils.h"
 
+#define _CRT_SECURE_NO_WARNINGS
+#define MAX_CHAR_COUNT 100
 
-// Comment list:
-/* 1. Run checks for numberOfVertices: above 2 [for s,t, and the rest], mispar shalem, etc.
- * 2. Check that is mispar shalem, bigger than 0.
- * 3. Check that sName is smaller than numberOfVertices, misparShalem.
- * 4. Check that vertices are under numberOfVertices, cut is bigger than 0.
- *
- */
 
 int main()
 {
     int numberOfVertices = 0, numberOfEdges = 0, sName = 0, tName = 0;
-    cin >> numberOfVertices;// 1.
-    cin >> numberOfEdges;// 2.
-    cin >> sName;// 3.
-    cin >> tName;// 3.
+    string userInput;
+    cin >> userInput;
+    if (!Utils::getIntFromString(userInput, numberOfVertices))
+    {
+        // terminate - invalid value.
+        exit(1);
+    }
+    userInput.erase();
+    cin >> userInput;
+    if(!Utils::getIntFromString(userInput, numberOfEdges))
+    {
+        // terminate - invalid value.
+        exit(1);
+    }
+    userInput.erase();
+    cin >> userInput;
+    if (!Utils::getIntFromString(userInput, sName))
+    {
+        // terminate - invalid value.
+        exit(1);
+    }
+    userInput.erase();
+    cin >> userInput;
+    if (!Utils::getIntFromString(userInput, tName))
+    {
+        // terminate - invalid value.
+        exit(1);
+    }
+
+    if(!Utils::checkUserFirstData(numberOfVertices, numberOfEdges, sName, tName))
+    {
+        // terminate - invalid value.
+        exit(1);
+    }
 
     DirectedGraph graphFromUser;
     graphFromUser.makeEmptyGraph(numberOfVertices);
     
     for(int i=0; i<numberOfEdges;i++)
     {
-        int startVertex = 0, endVertex = 0, cut = 0; 
-        cin >> startVertex >> endVertex >> cut; // 4.
+        char userNewShlasha[MAX_CHAR_COUNT] = {};
 
+
+        /// BUG:
+        /// userNewShlasha isn't being updated with the user input.
+
+
+        cin.getline(userNewShlasha, MAX_CHAR_COUNT, '\n');
+        int startVertex = 0, endVertex = 0, cut = 0;
+
+        if (sscanf_s(userNewShlasha, "%d%d%d", &startVertex, &endVertex, &cut) != 3 ||
+            !Utils::checkUserNewEdge(startVertex - 1, endVertex - 1, cut, numberOfVertices))
+        {
+			// Terminate
+            exit(1);
+        }
+        
         graphFromUser.addEdge(startVertex-1, endVertex-1, cut);
     }
 
@@ -42,3 +81,4 @@ int main()
     // Continue App
 
 }
+
