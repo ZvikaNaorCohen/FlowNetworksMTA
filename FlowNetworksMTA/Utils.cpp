@@ -76,7 +76,7 @@ void Utils:: getFirstData(int& numberOfVertices, int& numberOfEdges, int& sName,
 	{
 		invalidInput();
 	}
-
+	userInput.erase();
 	if (!checkUserFirstData(numberOfVertices, numberOfEdges, sName, tName))
 	{
 		invalidInput();
@@ -137,4 +137,24 @@ bool Utils::checkUserShlasha(string userInput, int& startVertex, int& endVertex,
 		validInput = false;
 	}
 	return validInput;
+}
+
+void Utils::shareConclusions(vector<int> S, vector<int> T, int maximumFlow, bool BFSmethod)
+{
+	BFSmethod ? cout << "BFS Method: " << endl : cout << "Greedy Method: " << endl;
+	cout << "Max flow = " << maximumFlow << endl;
+	cout << "Min cut: S = ";
+	for(int i=0; i<S.size(); i++)
+	{
+		cout << S[i] + 1 << ", ";
+	}
+	cout << "\b\b";
+	cout << ". ";
+	cout << "T = ";
+	for (int i = 0; i < T.size(); i++)
+	{
+		cout << T[i]+1 << ", ";
+	}
+	cout << "\b\b";
+	cout << ". ";
 }
