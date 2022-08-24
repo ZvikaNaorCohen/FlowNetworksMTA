@@ -15,11 +15,7 @@ int main()
     graphFromUser.makeEmptyGraph(numberOfVertices);
     graphFromUser.makeGraphFromUserInput(numberOfVertices, numberOfEdges);
     graphFromUser.fordFalkersonUsingBFS(sName-1, tName-1);
-    // Finished Ford Falkerson Using BFS
-
-
-    // Dikjstra way:
-
+    graphFromUser.fordFalkersonUsingDijkstra(sName - 1, tName - 1);
 
 }
 

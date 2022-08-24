@@ -49,13 +49,47 @@ void DirectedGraph::runBFS(int s, vector<int>& d, vector<int>& p)
 	}
 }
 
-void DirectedGraph::formatDandP(vector<int>& d, vector<int>& p, int numberOfVertices)
+void DirectedGraph::runDijkstra(int s, vector<int>& d, vector<int>& p)
+{
+	std::priority_queue<int> PQ;
+	// Flipped initialization, s is inf and rest are 0
+	formatDandP(d, p, adjLists.size(), true);
+	PQ.push(s);
+	d[s] = INF;
+	while (!PQ.empty())
+	{
+		int u = PQ.top();
+		PQ.pop();
+		for (Edge neighbor : adjLists[u])
+		{
+			// condition might be incorrect
+			if (d[neighbor.getEnd()] == 0 && neighbor.getKibulShiuri() != 0 && d[u] < d[neighbor.getEnd()] + neighbor.getKibulShiuri())
+			{
+				d[neighbor.getEnd()] = d[u] + 1;
+				p[neighbor.getEnd()] = u;
+				// Increase or decrease key
+				increaseKey(PQ, neighbor.getEnd());
+			}
+		}
+	}
+}
+
+void DirectedGraph::increaseKey(std::priority_queue<int>& PQ, int u)
+{
+	// Figure out if needed
+}
+
+
+void DirectedGraph::formatDandP(vector<int>& d, vector<int>& p, int numberOfVertices, bool dijk = false)
 {
 	d.resize(numberOfVertices);
 	p.resize(numberOfVertices);
 	for (int i = 0; i < numberOfVertices; i++)
 	{
-		d[i] = INT32_MAX;
+		if (dijk)
+			d[i] = 0;
+		else
+			d[i] = INT32_MAX;
 		p[i] = -1;
 	}
 }
@@ -83,6 +117,31 @@ void DirectedGraph::fordFalkersonUsingBFS(int s, int t)
 	int maximumFlow = getHatahMinimali(S, T, d, p, s);
 	Utils::shareConclusions(S, T, maximumFlow, true);
 }
+
+void DirectedGraph::fordFalkersonUsingDijkstra(int s, int t)
+{
+	vector<int> d, p;
+	int numberOfVertices = adjLists.size();
+	DirectedGraph graphShiuri;
+	graphShiuri.makeEmptyGraph(adjLists.size());
+	graphShiuri = buildGraphShiuri(*this);
+	d.resize(numberOfVertices);
+	p.resize(numberOfVertices);
+	graphShiuri.runDijkstra(s, d, p);
+	while (d[t] != INT32_MAX)
+	{
+		int kibulShiuri = this->getKibulShiuri(d, p, t);
+		updateEdgesKibulShiuri(kibulShiuri, p, t, graphShiuri);
+		formatDandP(d, p, adjLists.size());
+		graphShiuri.runDijkstra(s, d, p); // NEED TO DELETE KSHATOT REVUIOT !!!!
+	}
+
+	// Share conclusions.
+	vector<int> S, T;
+	int maximumFlow = getHatahMinimali(S, T, d, p, s);
+	Utils::shareConclusions(S, T, maximumFlow, true);
+}
+
 
 int DirectedGraph::getHatahMinimali(vector<int>& S, vector<int>& T, vector<int> d, vector<int> p, int sName)
 {
