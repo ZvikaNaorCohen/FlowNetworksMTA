@@ -1,12 +1,12 @@
 #pragma once
 #include "Edge.h"
 #include "Utils.h"
-
 #include <iostream>
 #include <vector>
 #include <string>
 #include <list>
 #include <queue>
+#define INF 0x3f3f3f3f
 
 using namespace std;
 
@@ -21,10 +21,13 @@ public:
 	void addEdge(int startVertex, int endVertex, int flow, int cut);
 	void removeEdge(int startVertex, int endVertex);
 	void runBFS(int s, vector<int>& d, vector<int>& p);
+	void runDijkstra(int s, vector<int>& d, vector<int>& p);
+	void increaseKey(std::priority_queue<int>& PQ, int u);
 	Edge& getEdgeFromGraph(int startVertex, int endVertex);
 	void makeGraphFromUserInput(int numberOfVertices, int numberOfEdges);
 	void fordFalkersonUsingBFS(int s, int t);
-	static void formatDandP(vector<int>& d, vector<int>& p, int numberOfVertices);
+	void fordFalkersonUsingDijkstra(int s, int t);
+	static void formatDandP(vector<int>& d, vector<int>& p, int numberOfVertices, bool dijk);
 	void updateEdgesKibulShiuri(int kibulShiuri, vector<int>& p, int t, DirectedGraph& graphShiuri);
 	int getKibulShiuri(vector<int>& d, vector<int>& p, int t);
 	DirectedGraph buildGraphShiuri(DirectedGraph originalGraph);
