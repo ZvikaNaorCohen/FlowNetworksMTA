@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <iostream>
+#include <ostream>
+using namespace std;
 
 class Utils
 {

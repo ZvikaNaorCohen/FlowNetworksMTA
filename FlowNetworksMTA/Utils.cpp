@@ -1,8 +1,6 @@
 #include "Utils.h"
 
-#include <iostream>
-#include <ostream>
-using namespace std;
+
 
 bool Utils::getIntFromString(std::string i_UserInput, int& o_OutputInt)
 {

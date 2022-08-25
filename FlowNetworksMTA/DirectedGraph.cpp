@@ -30,7 +30,7 @@ void DirectedGraph::removeEdge(int startVertex, int endVertex)
 void DirectedGraph::runBFS(int s, vector<int>& d, vector<int>& p)
 {
 	queue<int> Q;
-	formatDandP(d, p, adjLists.size());
+	formatDandP(d, p, adjLists.size(), false);
 	Q.push(s);
 	d[s] = 0;
 	while(!Q.empty())
