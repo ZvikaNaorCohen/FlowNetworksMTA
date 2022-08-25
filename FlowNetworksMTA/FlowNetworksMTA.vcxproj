@@ -142,12 +142,16 @@
     <ClCompile Include="Edge.cpp" />
     <ClCompile Include="DirectedGraph.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MaxHeap.cpp" />
     <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="ZugSador.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Edge.h" />
     <ClInclude Include="DirectedGraph.h" />
+    <ClInclude Include="MaxHeap.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="ZugSador.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
