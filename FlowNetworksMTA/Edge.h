@@ -4,6 +4,8 @@ class Edge
 	int startVertex, endVertex, flow, cut;
 	int kibulShiuri = 0;
 
+	int arraySpot;
+
 public:
 	Edge(int _startVertex, int _endVertex, int _flow, int _cut) : startVertex(_startVertex), endVertex(_endVertex), flow(_flow), cut(_cut) {}
 	int getStart() { return startVertex; }
@@ -13,5 +15,6 @@ public:
 	int getKibulShiuri() { return kibulShiuri; }
 	void setKibulShiuri(int _kibulShiuri) { kibulShiuri = _kibulShiuri; }
 	void setFlow(int _flow) { flow = _flow; }
+	void setArrSpot(int spot) { arraySpot = spot; }
 };
 

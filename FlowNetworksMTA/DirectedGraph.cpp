@@ -51,34 +51,54 @@ void DirectedGraph::runBFS(int s, vector<int>& d, vector<int>& p)
 
 void DirectedGraph::runDijkstra(int s, vector<int>& d, vector<int>& p)
 {
-	std::priority_queue<int> PQ;
+	// std::priority_queue<int> PQ;
 	// Flipped initialization, s is inf and rest are 0
-	formatDandP(d, p, adjLists.size(), true);
-	PQ.push(s);
-	d[s] = INF;
-	while (!PQ.empty())
+
+	// Don't need to flip init. Remove the "false" thing in the function.
+	formatDandP(d, p, adjLists.size(), false);
+	d[s] = 0;
+	MaxHeap PQ;
+	vector<ZugSador> allGraphZugSador = getAllGraphZugSador(d);
+	PQ.Build(allGraphZugSador);
+	// PQ.push(s);
+	
+	while (!PQ.isEmptyMaxHeap())
 	{
-		int u = PQ.top();
-		PQ.pop();
+		// not sure if to get start or end
+		int u = PQ.max().getStartVertex();
+		PQ.deleteMax();
 		for (Edge neighbor : adjLists[u])
 		{
+			// Relax:	if(d[v] > d[u] + w(u,v)
+
 			// condition might be incorrect
-			if (d[neighbor.getEnd()] == 0 && neighbor.getKibulShiuri() != 0 && d[u] < d[neighbor.getEnd()] + neighbor.getKibulShiuri())
+			if (d[neighbor.getEnd()] > d[u] + neighbor.getKibulShiuri())
 			{
-				d[neighbor.getEnd()] = d[u] + 1;
+				d[neighbor.getEnd()] = d[u] + neighbor.getKibulShiuri();
 				p[neighbor.getEnd()] = u;
-				// Increase or decrease key
-				increaseKey(PQ, neighbor.getEnd());
+				int spotInArr = PQ.getPlaceInArr(neighbor.getEnd());
+				PQ.increaseKey(spotInArr, d[neighbor.getEnd()]);
 			}
 		}
 	}
 }
 
-void DirectedGraph::increaseKey(std::priority_queue<int>& PQ, int u)
+vector<ZugSador> DirectedGraph::getAllGraphZugSador(vector<int>& d)
 {
-	// Figure out if needed
+	vector<ZugSador> vectorToReturn;
+	for(int i=0; i<d.size(); i++)
+	{
+		// Need to emplace back i, kibul_Shiuri minimali == d[i]
+		vectorToReturn.emplace_back(ZugSador(i, d[i]));
+	}
+	return vectorToReturn;
 }
 
+//void DirectedGraph::increaseKey(std::priority_queue<int>& PQ, int u)
+//{
+//	// Figure out if needed
+//}
+//
 
 void DirectedGraph::formatDandP(vector<int>& d, vector<int>& p, int numberOfVertices, bool dijk = false)
 {
@@ -106,7 +126,7 @@ void DirectedGraph::fordFalkersonUsingBFS(int s, int t)
 	graphShiuri.runBFS(s, d, p);
 	while(d[t] != INT32_MAX)
 	{
-		int kibulShiuri = this->getKibulShiuri(d, p, t);
+		int kibulShiuri = this->getMinimumKibulShiuri(d, p, t);
 		updateEdgesKibulShiuri(kibulShiuri, p, t, graphShiuri);
 		formatDandP(d, p, adjLists.size());
 		graphShiuri.runBFS(s, d, p); // NEED TO DELETE KSHATOT REVUIOT !!!!
@@ -130,7 +150,8 @@ void DirectedGraph::fordFalkersonUsingDijkstra(int s, int t)
 	graphShiuri.runDijkstra(s, d, p);
 	while (d[t] != INT32_MAX)
 	{
-		int kibulShiuri = this->getKibulShiuri(d, p, t);
+		// get the minimum kibul shiru from the maximum path that Dikjstra found
+		int kibulShiuri = this->getMinimumKibulShiuri(d, p, t);
 		updateEdgesKibulShiuri(kibulShiuri, p, t, graphShiuri);
 		formatDandP(d, p, adjLists.size());
 		graphShiuri.runDijkstra(s, d, p); // NEED TO DELETE KSHATOT REVUIOT !!!!
@@ -161,7 +182,7 @@ int DirectedGraph::getHatahMinimali(vector<int>& S, vector<int>& T, vector<int> 
 }
 
 
-int DirectedGraph::getKibulShiuri(vector<int>& d, vector<int>& p, int t)
+int DirectedGraph::getMinimumKibulShiuri(vector<int>& d, vector<int>& p, int t)
 {
 	int startVertex = p[t];
 	int endVertex = t;
@@ -178,6 +199,25 @@ int DirectedGraph::getKibulShiuri(vector<int>& d, vector<int>& p, int t)
 	}
 
 	return minimumKibulShiuri;
+}
+
+int DirectedGraph::getMaximumKibulShiuri(vector<int>& d, vector<int>& p, int t)
+{
+	int startVertex = p[t];
+	int endVertex = t;
+	int maximumKibulShiuri = 0;
+	while (startVertex != -1)
+	{
+		int kibulShiuri = getEdgeFromGraph(startVertex, endVertex).getCut() - getEdgeFromGraph(startVertex, endVertex).getFlow();
+		if (kibulShiuri > maximumKibulShiuri)
+		{
+			maximumKibulShiuri = kibulShiuri;
+		}
+		endVertex = startVertex;
+		startVertex = p[startVertex];
+	}
+
+	return maximumKibulShiuri;
 }
 
 void DirectedGraph::updateEdgesKibulShiuri(int kibulShiuri, vector<int>& p, int t, DirectedGraph& graphShiuri)
