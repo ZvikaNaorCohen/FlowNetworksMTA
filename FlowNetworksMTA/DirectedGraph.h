@@ -5,6 +5,7 @@
 #include <list>
 #include <queue>
 #include "MaxHeap.h"
+#include "PriorityQueue.h"
 #define INF 0x3f3f3f3f
 
 using namespace std;
@@ -26,7 +27,7 @@ public:
 	void makeGraphFromUserInput(int numberOfVertices, int numberOfEdges);
 	void fordFalkersonUsingBFS(int s, int t);
 	void fordFalkersonUsingDijkstra(int s, int t);
-	static void formatDandP(vector<int>& d, vector<int>& p, int numberOfVertices, bool dijk);
+	static void formatDandP(vector<int>& d, vector<int>& p, int numberOfVertices);
 	void updateEdgesKibulShiuri(int kibulShiuri, vector<int>& p, int t, DirectedGraph& graphShiuri);
 	int getMinimumKibulShiuri(vector<int>& d, vector<int>& p, int t);
 	int getMaximumKibulShiuri(vector<int>& d, vector<int>& p, int t);

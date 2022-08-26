@@ -30,7 +30,7 @@ void DirectedGraph::removeEdge(int startVertex, int endVertex)
 void DirectedGraph::runBFS(int s, vector<int>& d, vector<int>& p)
 {
 	queue<int> Q;
-	formatDandP(d, p, adjLists.size(), false);
+	formatDandP(d, p, adjLists.size());
 	Q.push(s);
 	d[s] = 0;
 	while(!Q.empty())
@@ -51,11 +51,8 @@ void DirectedGraph::runBFS(int s, vector<int>& d, vector<int>& p)
 
 void DirectedGraph::runDijkstra(int s, vector<int>& d, vector<int>& p)
 {
-	// std::priority_queue<int> PQ;
-	// Flipped initialization, s is inf and rest are 0
-
-	// Don't need to flip init. Remove the "false" thing in the function.
-	formatDandP(d, p, adjLists.size(), false);
+	PriorityQueue PQ;
+	formatDandP(d, p, adjLists.size());
 	d[s] = 0;
 	MaxHeap PQ;
 	vector<ZugSador> allGraphZugSador = getAllGraphZugSador(d);
@@ -100,16 +97,13 @@ vector<ZugSador> DirectedGraph::getAllGraphZugSador(vector<int>& d)
 //}
 //
 
-void DirectedGraph::formatDandP(vector<int>& d, vector<int>& p, int numberOfVertices, bool dijk = false)
+void DirectedGraph::formatDandP(vector<int>& d, vector<int>& p, int numberOfVertices)
 {
 	d.resize(numberOfVertices);
 	p.resize(numberOfVertices);
 	for (int i = 0; i < numberOfVertices; i++)
 	{
-		if (dijk)
-			d[i] = 0;
-		else
-			d[i] = INT32_MAX;
+		d[i] = INT32_MAX;
 		p[i] = -1;
 	}
 }
