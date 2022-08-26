@@ -15,6 +15,6 @@ public:
 	static void invalidInput();
 	static void getFirstData(int& numberOfVertices, int& numberOfEdges, int& sName, int& tName);
 	static bool checkUserShlasha(std::string input, int& startVertex, int& endVertex, int& cut);
-	static void shareConclusions(std::vector<int> S, std::vector<int> T, int maximumFlow, bool BFSmethod);
+	static void shareConclusions(std::vector<int> S, std::vector<int> T, int maximumFlow, bool dijk);
 };
 

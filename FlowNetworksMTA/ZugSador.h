@@ -13,5 +13,6 @@ public:
 	int getKey()const { return key; }
 	int getStartVertex()const { return startVertex; }
 	int getSpotInArr()const { return spotInArr; }
+	void deleteZugSador();
 };
 

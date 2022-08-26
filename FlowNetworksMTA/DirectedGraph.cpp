@@ -23,8 +23,24 @@ void DirectedGraph::addEdge(int startVertex, int endVertex, int flow, int cut)
 
 void DirectedGraph::removeEdge(int startVertex, int endVertex)
 {
-	std::vector<Edge> adjList = adjLists[startVertex];
-	adjList.erase(std::remove_if(adjList.begin(), adjList.end(), [&](Edge x) {return x.getEnd() == endVertex; }), adjList.end());
+	// std::vector<Edge> adjList = adjLists[startVertex];
+	int index = -1;
+	for(int i=0; i<adjLists[startVertex].size(); i++)
+	{
+		if(adjLists[startVertex][i].getEnd() == endVertex)
+		{
+			index = i;
+		}
+	}
+	if(index == -1)
+	{
+		Utils::invalidInput();
+	}
+	else
+	{
+		adjLists[startVertex].erase(adjLists[startVertex].begin() + index);
+	}
+	// adjList.erase(std::remove_if(adjList.begin(), adjList.end(), [&](Edge x) {return x.getEnd() == endVertex; }), adjList.end());
 }
 
 void DirectedGraph::runBFS(int s, vector<int>& d, vector<int>& p)
@@ -51,42 +67,92 @@ void DirectedGraph::runBFS(int s, vector<int>& d, vector<int>& p)
 
 void DirectedGraph::runDijkstra(int s, vector<int>& d, vector<int>& p)
 {
-	PriorityQueue PQ;
-	formatDandP(d, p, adjLists.size());
+	// PriorityQueue PQ;
+	formatDandP(d, p, adjLists.size(), true);
 	d[s] = 0;
 	MaxHeap PQ;
-	vector<ZugSador> allGraphZugSador = getAllGraphZugSador(d);
+	vector<ZugSador*> allGraphZugSador = getAllGraphZugSador(d);
 	PQ.Build(allGraphZugSador);
 	// PQ.push(s);
 	
 	while (!PQ.isEmptyMaxHeap())
 	{
-		// not sure if to get start or end
-		int u = PQ.max().getStartVertex();
+		int u = PQ.max()->getStartVertex();
 		PQ.deleteMax();
+		/*if (u == s)
+		{
+			d[u] = 0;
+		}*/
 		for (Edge neighbor : adjLists[u])
 		{
-			// Relax:	if(d[v] > d[u] + w(u,v)
-
-			// condition might be incorrect
-			if (d[neighbor.getEnd()] > d[u] + neighbor.getKibulShiuri())
+			int v = neighbor.getEnd();
+				// condition might be incorrect
+			/* if (neighbor.getKibulShiuri() > 0 && d[neighbor.getEnd()] < d[u] + neighbor.getKibulShiuri())
 			{
 				d[neighbor.getEnd()] = d[u] + neighbor.getKibulShiuri();
 				p[neighbor.getEnd()] = u;
 				int spotInArr = PQ.getPlaceInArr(neighbor.getEnd());
-				PQ.increaseKey(spotInArr, d[neighbor.getEnd()]);
+				if (spotInArr >= 0)
+				{
+					PQ.increaseKey(spotInArr, d[neighbor.getEnd()]);
+				}
+			}*/
+
+			if(d[v] < d[u] + neighbor.getKibulShiuri() && d[u] != -1 && neighbor.getKibulShiuri() != 0 && d[v] == -1)
+			{
+				d[v] = d[u] + neighbor.getKibulShiuri();
+				p[v] = u;
+				int spotInArr = PQ.getPlaceInArr(v);
+				if (spotInArr >= 0)
+				{
+					PQ.increaseKey(spotInArr, d[v]);
+				}
 			}
+
+
+			/*if(neighbor.getKibulShiuri() != 0 && d[neighbor.getEnd()] < neighbor.getKibulShiuri())
+			{
+				d[neighbor.getEnd()] = neighbor.getKibulShiuri();
+				p[neighbor.getEnd()] = u;
+				int spotInArr = PQ.getPlaceInArr(neighbor.getEnd());
+				if (spotInArr >= 0)
+				{
+					PQ.increaseKey(spotInArr, d[neighbor.getEnd()]);
+				}
+			}*/
+
+
 		}
 	}
 }
 
-vector<ZugSador> DirectedGraph::getAllGraphZugSador(vector<int>& d)
+void DirectedGraph::formatDandP(vector<int>& d, vector<int>& p, int numberOfVertices, bool dijk)
 {
-	vector<ZugSador> vectorToReturn;
+	d.resize(numberOfVertices);
+	p.resize(numberOfVertices);
+	for (int i = 0; i < numberOfVertices; i++)
+	{
+		if (dijk)
+		{
+			d[i] = -1;
+		}
+		else
+		{
+			d[i] = INT32_MAX;
+		}
+
+		p[i] = -1;
+	}
+}
+
+
+vector<ZugSador*> DirectedGraph::getAllGraphZugSador(vector<int>& d)
+{
+	vector<ZugSador*> vectorToReturn;
 	for(int i=0; i<d.size(); i++)
 	{
 		// Need to emplace back i, kibul_Shiuri minimali == d[i]
-		vectorToReturn.emplace_back(ZugSador(i, d[i]));
+		vectorToReturn.emplace_back(new ZugSador(i, d[i]));
 	}
 	return vectorToReturn;
 }
@@ -97,73 +163,112 @@ vector<ZugSador> DirectedGraph::getAllGraphZugSador(vector<int>& d)
 //}
 //
 
-void DirectedGraph::formatDandP(vector<int>& d, vector<int>& p, int numberOfVertices)
-{
-	d.resize(numberOfVertices);
-	p.resize(numberOfVertices);
-	for (int i = 0; i < numberOfVertices; i++)
-	{
-		d[i] = INT32_MAX;
-		p[i] = -1;
-	}
-}
+//
+//void DirectedGraph::fordFalkersonUsingBFS(int s, int t)
+//{
+//	vector<int> d, p;
+//	int numberOfVertices = adjLists.size();
+//	DirectedGraph graphShiuri;
+//	graphShiuri.makeEmptyGraph(adjLists.size());
+//	graphShiuri = buildGraphShiuri(*this);
+//	d.resize(numberOfVertices);
+//	p.resize(numberOfVertices);
+//	graphShiuri.runBFS(s, d, p);
+//	while(d[t] != INT32_MAX)
+//	{
+//		int kibulShiuri = this->getMinimumKibulShiuri(d, p, t);
+//		updateEdgesKibulShiuri(kibulShiuri, p, t, graphShiuri);
+//		formatDandP(d, p, adjLists.size());
+//		graphShiuri.runBFS(s, d, p); // NEED TO DELETE KSHATOT REVUIOT !!!!
+//	}
+//
+//	// Share conclusions.
+//	vector<int> S, T;
+//	int maximumFlow = getHatahMinimali(S, T, d, p, s, false);
+//	Utils::shareConclusions(S, T, maximumFlow, true);
+//}
+//
+//void DirectedGraph::fordFalkersonUsingDijkstra(int s, int t)
+//{
+//	vector<int> d, p;
+//	int numberOfVertices = adjLists.size();
+//	DirectedGraph graphShiuri;
+//	graphShiuri.makeEmptyGraph(adjLists.size());
+//	graphShiuri = buildGraphShiuri(*this);
+//	d.resize(numberOfVertices);
+//	p.resize(numberOfVertices);
+//	graphShiuri.runDijkstra(s, d, p);
+//	while (d[t] != -1)
+//	{
+//		// get the minimum kibul shiru from the maximum path that Dikjstra found
+//		int kibulShiuri = this->getMinimumKibulShiuri(d, p, t);
+//		updateEdgesKibulShiuri(kibulShiuri, p, t, graphShiuri);
+//		formatDandP(d, p, adjLists.size(), true);
+//		graphShiuri.runDijkstra(s, d, p); // NEED TO DELETE KSHATOT REVUIOT !!!!
+//	}
+//
+//	// Share conclusions.
+//	vector<int> S, T;
+//	int maximumFlow = getHatahMinimali(S, T, d, p, s, true);
+//	Utils::shareConclusions(S, T, maximumFlow, false);
+// }
 
-void DirectedGraph::fordFalkersonUsingBFS(int s, int t)
+void DirectedGraph::fordFalkerson(int s, int t, bool dijk)
 {
 	vector<int> d, p;
+	int inf = dijk ? -1 : INT32_MAX;
 	int numberOfVertices = adjLists.size();
 	DirectedGraph graphShiuri;
 	graphShiuri.makeEmptyGraph(adjLists.size());
 	graphShiuri = buildGraphShiuri(*this);
 	d.resize(numberOfVertices);
 	p.resize(numberOfVertices);
-	graphShiuri.runBFS(s, d, p);
-	while(d[t] != INT32_MAX)
+	if(dijk)
+	{
+		graphShiuri.runDijkstra(s, d, p);
+	}
+	else
+	{
+		graphShiuri.runBFS(s, d, p);
+	}
+	while (d[t] != inf)
 	{
 		int kibulShiuri = this->getMinimumKibulShiuri(d, p, t);
 		updateEdgesKibulShiuri(kibulShiuri, p, t, graphShiuri);
-		formatDandP(d, p, adjLists.size());
-		graphShiuri.runBFS(s, d, p); // NEED TO DELETE KSHATOT REVUIOT !!!!
+		formatDandP(d, p, adjLists.size(), true);
+		if (dijk)
+		{
+			graphShiuri.runDijkstra(s, d, p);
+		}
+		else
+		{
+			graphShiuri.runBFS(s, d, p);
+		}
 	}
 
 	// Share conclusions.
 	vector<int> S, T;
-	int maximumFlow = getHatahMinimali(S, T, d, p, s);
-	Utils::shareConclusions(S, T, maximumFlow, true);
-}
-
-void DirectedGraph::fordFalkersonUsingDijkstra(int s, int t)
-{
-	vector<int> d, p;
-	int numberOfVertices = adjLists.size();
-	DirectedGraph graphShiuri;
-	graphShiuri.makeEmptyGraph(adjLists.size());
-	graphShiuri = buildGraphShiuri(*this);
-	d.resize(numberOfVertices);
-	p.resize(numberOfVertices);
-	graphShiuri.runDijkstra(s, d, p);
-	while (d[t] != INT32_MAX)
+	int maximumFlow = getHatahMinimali(S, T, d, p, s, dijk);
+	if (dijk)
 	{
-		// get the minimum kibul shiru from the maximum path that Dikjstra found
-		int kibulShiuri = this->getMinimumKibulShiuri(d, p, t);
-		updateEdgesKibulShiuri(kibulShiuri, p, t, graphShiuri);
-		formatDandP(d, p, adjLists.size());
-		graphShiuri.runDijkstra(s, d, p); // NEED TO DELETE KSHATOT REVUIOT !!!!
+		Utils::shareConclusions(S, T, maximumFlow, dijk);
 	}
-
-	// Share conclusions.
-	vector<int> S, T;
-	int maximumFlow = getHatahMinimali(S, T, d, p, s);
-	Utils::shareConclusions(S, T, maximumFlow, true);
+	else
+	{
+		Utils::shareConclusions(S, T, maximumFlow, dijk);
+	}
 }
 
 
-int DirectedGraph::getHatahMinimali(vector<int>& S, vector<int>& T, vector<int> d, vector<int> p, int sName)
+
+
+int DirectedGraph::getHatahMinimali(vector<int>& S, vector<int>& T, vector<int> d, vector<int> p, int sName, bool dijk)
 {
 	int maximumFlow = 0;
+	int inf = dijk == true ? -1 : INT32_MAX;
 	for(int i=0; i<d.size(); i++)
 	{
-		d[i] == INT32_MAX ? T.push_back(i) : S.push_back(i);
+		d[i] == inf ? T.push_back(i) : S.push_back(i);
 	}
 	for (int i = 0; i < p.size(); i++)
 	{
