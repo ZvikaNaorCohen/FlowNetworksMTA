@@ -137,9 +137,9 @@ bool Utils::checkUserShlasha(string userInput, int& startVertex, int& endVertex,
 	return validInput;
 }
 
-void Utils::shareConclusions(vector<int> S, vector<int> T, int maximumFlow, bool BFSmethod)
+void Utils::shareConclusions(vector<int> S, vector<int> T, int maximumFlow, bool dijk)
 {
-	BFSmethod ? cout << "BFS Method: " << endl : cout << "Greedy Method: " << endl;
+	dijk ? cout << "BFS Method: " << endl : cout << "Greedy Method: " << endl;
 	cout << "Max flow = " << maximumFlow << endl;
 	cout << "Min cut: S = ";
 	for(int i=0; i<S.size(); i++)
@@ -154,5 +154,5 @@ void Utils::shareConclusions(vector<int> S, vector<int> T, int maximumFlow, bool
 		cout << T[i]+1 << ", ";
 	}
 	cout << "\b\b";
-	cout << ". ";
+	cout << ". " << endl;
 }

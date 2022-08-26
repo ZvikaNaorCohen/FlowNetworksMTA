@@ -27,14 +27,17 @@ public:
 	void makeGraphFromUserInput(int numberOfVertices, int numberOfEdges);
 	void fordFalkersonUsingBFS(int s, int t);
 	void fordFalkersonUsingDijkstra(int s, int t);
-	static void formatDandP(vector<int>& d, vector<int>& p, int numberOfVertices);
+	static void formatDandP(vector<int>& d, vector<int>& p, int numberOfVertices, bool dijk = false);
 	void updateEdgesKibulShiuri(int kibulShiuri, vector<int>& p, int t, DirectedGraph& graphShiuri);
 	int getMinimumKibulShiuri(vector<int>& d, vector<int>& p, int t);
 	int getMaximumKibulShiuri(vector<int>& d, vector<int>& p, int t);
 	DirectedGraph buildGraphShiuri(DirectedGraph originalGraph);
 	bool hasEdge(int startVertex, int endVertex);
 	void setKibulShiuri(int startVertex, int endVertex, int kibulShiuri);
-	int getHatahMinimali(vector<int>& S, vector<int>& T, vector<int> d, vector<int> p, int s);
-	vector<ZugSador> getAllGraphZugSador(vector<int>& d);
+	int getHatahMinimali(vector<int>& S, vector<int>& T, vector<int> d, vector<int> p, int s, bool dijk);
+
+
+	void fordFalkerson(int s, int t, bool dijk);
+	vector<ZugSador*> getAllGraphZugSador(vector<int>& d);
 };
 

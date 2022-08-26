@@ -1,36 +1,29 @@
 #pragma once
-#include <cstdint>
-#define MAX_SIZE 9999
-#include <vector>
-
 #include "ZugSador.h"
-#include "Edge.h"
-#include <cstdlib>
 #include <iostream>
+#include <vector>
 using namespace std;
+#define MAX_SIZE 9999
+
 
 class MaxHeap
 {
 	int heapSize = 0;
-	std::vector<ZugSador> arr;
+	ZugSador* arr[MAX_SIZE] = { 0 };
 
 public:
-	// void emptyMaxHeap();
-	ZugSador max()const { return arr[0]; };
-	ZugSador getMaxHeapArr(int i) { return arr[i]; }
+	ZugSador* getMaxHeapArr(int i) { return arr[i]; }
+	bool isEmptyMaxHeap()const { return heapSize == 0; }
+	ZugSador* max()const { return arr[0]; };
+	void Build(vector<ZugSador*>& allGraphZugSador);
+	int getPlaceInArr(int i_EndVertex)const;
 	int getMaxHeapSize()const { return heapSize; }
+	void increaseKey(int i_PlaceInArr, int i_NewKey);
+	void insert(ZugSador& item);
+	void deleteMax();
 	void upFixHeap(int index);
 	void downFixHeap(int index);
-	void swap(int index1, int index2);
-	int getPlaceInArr(int i_EndVertex)const;
-
-	void Build(std::vector<ZugSador>& i_ArrayOfZugSador);
-	bool isEmptyMaxHeap()const { return arr.empty(); }
-	void deleteMax();
-	void increaseKey(int placeInArr, int newKey);
-	
-	void insert(ZugSador& item);
 	void Delete(int i);
-	
+	void swap(int index1, int index2);
 };
 
