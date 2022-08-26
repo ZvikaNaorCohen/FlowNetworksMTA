@@ -16,9 +16,6 @@ int main()
     graphFromUserForDijkstra.makeGraphFromUserInput(numberOfVertices, numberOfEdges);
     graphFromUserForBFS = graphFromUserForDijkstra;
     graphFromUserForDijkstra.fordFalkerson(sName - 1, tName - 1, true);
-
-    graphFromUserForBFS.makeEmptyGraph(numberOfVertices);
     graphFromUserForBFS.fordFalkerson(sName - 1, tName - 1, false);
-
 }
 
