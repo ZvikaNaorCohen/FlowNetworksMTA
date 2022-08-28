@@ -67,13 +67,11 @@ void DirectedGraph::runBFS(int s, vector<int>& d, vector<int>& p)
 
 void DirectedGraph::runDijkstra(int s, vector<int>& d, vector<int>& p)
 {
-	// PriorityQueue PQ;
+	MaxHeap PQ;
 	formatDandP(d, p, adjLists.size(), true);
 	d[s] = 0;
-	MaxHeap PQ;
 	vector<ZugSador*> allGraphZugSador = getAllGraphZugSador(d);
 	PQ.Build(allGraphZugSador);
-	// PQ.push(s);
 	
 	while (!PQ.isEmptyMaxHeap())
 	{
@@ -215,14 +213,13 @@ vector<ZugSador*> DirectedGraph::getAllGraphZugSador(vector<int>& d)
 
 void DirectedGraph::fordFalkerson(int s, int t, bool dijk)
 {
-	vector<int> d, p;
+	vector<int> d, p , newD, newP;
 	int inf = dijk ? -1 : INT32_MAX;
 	int numberOfVertices = adjLists.size();
 	DirectedGraph graphShiuri;
 	graphShiuri.makeEmptyGraph(adjLists.size());
 	graphShiuri = buildGraphShiuri(*this);
-	d.resize(numberOfVertices);
-	p.resize(numberOfVertices);
+	d.resize(numberOfVertices); p.resize(numberOfVertices); newD.resize(numberOfVertices); newP.resize(numberOfVertices);
 	if(dijk)
 	{
 		graphShiuri.runDijkstra(s, d, p);
@@ -231,32 +228,28 @@ void DirectedGraph::fordFalkerson(int s, int t, bool dijk)
 	{
 		graphShiuri.runBFS(s, d, p);
 	}
-	while (d[t] != inf)
+	while (true)
 	{
 		int kibulShiuri = this->getMinimumKibulShiuri(d, p, t);
 		updateEdgesKibulShiuri(kibulShiuri, p, t, graphShiuri);
-		formatDandP(d, p, adjLists.size(), true);
 		if (dijk)
+			graphShiuri.runDijkstra(s, newD, newP);
+		else
+			graphShiuri.runBFS(s, newD, newP);
+
+		if (newP[newP.size() - 1] != -1)
 		{
-			graphShiuri.runDijkstra(s, d, p);
+			d = newD;
+			p = newP;
 		}
 		else
-		{
-			graphShiuri.runBFS(s, d, p);
-		}
+			break;
 	}
 
 	// Share conclusions.
 	vector<int> S, T;
 	int maximumFlow = getHatahMinimali(S, T, d, p, s, dijk);
-	if (dijk)
-	{
-		Utils::shareConclusions(S, T, maximumFlow, dijk);
-	}
-	else
-	{
-		Utils::shareConclusions(S, T, maximumFlow, dijk);
-	}
+	Utils::shareConclusions(S, T, maximumFlow, dijk);
 }
 
 
