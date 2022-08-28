@@ -34,8 +34,8 @@ public:
 	DirectedGraph buildGraphShiuri(DirectedGraph originalGraph);
 	bool hasEdge(int startVertex, int endVertex);
 	void setKibulShiuri(int startVertex, int endVertex, int kibulShiuri);
-	int getHatahMinimali(vector<int>& S, vector<int>& T, vector<int> d, vector<int> p, int s, bool dijk);
-
+	int getHatahMinimali(vector<int>& S, vector<int>& T, vector<int> d, vector<int> p, int sName, int tName, bool dijk);
+	int getMaximumFlow(vector<int>& S, vector<int>& T, vector<int> d, vector<int> p, int s, int tName, bool dijk);
 
 	void fordFalkerson(int s, int t, bool dijk);
 	vector<ZugSador*> getAllGraphZugSador(vector<int>& d);
