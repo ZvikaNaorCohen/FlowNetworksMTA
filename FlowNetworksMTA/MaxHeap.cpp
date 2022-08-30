@@ -1,12 +1,5 @@
 #include "MaxHeap.h"
 
-//void maxHeap::emptyMaxHeap()
-//{
-//	ZugSador* tmp = new ZugSador();
-//	for (int i = 0; i < MAX_SIZE; i++)
-//		arr[i] = tmp;
-//}
-
 int MaxHeap::getPlaceInArr(int i_EndVertex)const
 {
 	for (int i = 0; i < heapSize; i++)

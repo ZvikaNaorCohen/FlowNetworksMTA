@@ -1,7 +1,6 @@
 #include "Utils.h"
 
 
-
 bool Utils::getIntFromString(std::string i_UserInput, int& o_OutputInt)
 {
 	int index = 0, stringLength = i_UserInput.length();

@@ -1,19 +1,16 @@
 #pragma once
 #include "Edge.h"
 #include "Utils.h"
+#include "MaxHeap.h"
 #include <vector>
 #include <list>
 #include <queue>
-#include "MaxHeap.h"
-#include "PriorityQueue.h"
-#define INF 0x3f3f3f3f
 
 using namespace std;
 
 class DirectedGraph
 {
 	std::vector<std::vector<Edge>> adjLists;
-
 
 public:
 	void makeEmptyGraph(int numberOfVertices);
@@ -22,11 +19,8 @@ public:
 	void removeEdge(int startVertex, int endVertex);
 	void runBFS(int s, vector<int>& d, vector<int>& p);
 	void runDijkstra(int s, vector<int>& d, vector<int>& p);
-	void increaseKey(std::priority_queue<int>& PQ, int u);
 	Edge& getEdgeFromGraph(int startVertex, int endVertex);
 	void makeGraphFromUserInput(int numberOfVertices, int numberOfEdges);
-	void fordFalkersonUsingBFS(int s, int t);
-	void fordFalkersonUsingDijkstra(int s, int t);
 	static void formatDandP(vector<int>& d, vector<int>& p, int numberOfVertices, bool dijk = false);
 	void updateEdgesKibulShiuri(int kibulShiuri, vector<int>& p, int t, DirectedGraph& graphShiuri);
 	int getMinimumKibulShiuri(vector<int>& d, vector<int>& p, int t);
@@ -36,7 +30,6 @@ public:
 	void setKibulShiuri(int startVertex, int endVertex, int kibulShiuri);
 	int getHatahMinimali(vector<int>& S, vector<int>& T, vector<int> d, vector<int> p, int sName, int tName, bool dijk);
 	int getMaximumFlow(vector<int>& S, vector<int>& T, vector<int> d, vector<int> p, int s, int tName, bool dijk);
-
 	void fordFalkerson(int s, int t, bool dijk);
 	vector<ZugSador*> getAllGraphZugSador(vector<int>& d);
 };
