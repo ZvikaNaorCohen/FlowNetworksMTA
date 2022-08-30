@@ -213,13 +213,13 @@ vector<ZugSador*> DirectedGraph::getAllGraphZugSador(vector<int>& d)
 
 void DirectedGraph::fordFalkerson(int s, int t, bool dijk)
 {
-	vector<int> d, p , newD, newP;
+	vector<int> d, p; //, newD, newP;
 	int inf = dijk ? -1 : INT32_MAX;
 	int numberOfVertices = adjLists.size();
 	DirectedGraph graphShiuri;
 	graphShiuri.makeEmptyGraph(adjLists.size());
 	graphShiuri = buildGraphShiuri(*this);
-	d.resize(numberOfVertices); p.resize(numberOfVertices); newD.resize(numberOfVertices); newP.resize(numberOfVertices);
+	d.resize(numberOfVertices); p.resize(numberOfVertices); // newD.resize(numberOfVertices); newP.resize(numberOfVertices);
 	if(dijk)
 	{
 		graphShiuri.runDijkstra(s, d, p);
@@ -228,51 +228,74 @@ void DirectedGraph::fordFalkerson(int s, int t, bool dijk)
 	{
 		graphShiuri.runBFS(s, d, p);
 	}
-	while (true)
+	while (d[t] != inf)
 	{
 		int kibulShiuri = this->getMinimumKibulShiuri(d, p, t);
 		updateEdgesKibulShiuri(kibulShiuri, p, t, graphShiuri);
+		formatDandP(d, p, adjLists.size(), true);
 		if (dijk)
-			graphShiuri.runDijkstra(s, newD, newP);
+			graphShiuri.runDijkstra(s, d, p);
 		else
-			graphShiuri.runBFS(s, newD, newP);
+			graphShiuri.runBFS(s, d, p);
 
-		if (newP[newP.size() - 1] != -1)
-		{
-			d = newD;
-			p = newP;
-		}
-		else
-			break;
+		//if (newP[newP.size() - 1] != -1)
+		//{
+		//	d = newD;
+		//	p = newP;
+		//}
+		//else
+		//	break;
 	}
 
 	// Share conclusions.
 	vector<int> S, T;
-	int maximumFlow = getHatahMinimali(S, T, d, p, s, dijk);
+	int maximumFlow = getHatahMinimali(S, T, d, p, s, t, dijk);
 	Utils::shareConclusions(S, T, maximumFlow, dijk);
 }
 
 
 
 
-int DirectedGraph::getHatahMinimali(vector<int>& S, vector<int>& T, vector<int> d, vector<int> p, int sName, bool dijk)
+int DirectedGraph::getHatahMinimali(vector<int>& S, vector<int>& T, vector<int> d, vector<int> p, int sName, int tName, bool dijk)
 {
-	int maximumFlow = 0;
 	int inf = dijk == true ? -1 : INT32_MAX;
 	for(int i=0; i<d.size(); i++)
 	{
 		d[i] == inf ? T.push_back(i) : S.push_back(i);
 	}
-	for (int i = 0; i < p.size(); i++)
-	{
-		if(p[i] == sName)
-		{
-			maximumFlow += getEdgeFromGraph(p[i], i).getFlow();
-		}
-	}
-	return maximumFlow;
+	return getMaximumFlow(S, T, d, p, sName, tName, dijk);
 }
 
+int DirectedGraph::getMaximumFlow(vector<int>& S, vector<int>& T, vector<int> d, vector<int> p, int sName, int tName, bool dijk)
+{
+	int maximumFlow = 0;
+	int flowFromS = 0, flowToT = 0;
+	int inf = dijk ? -1 : INT32_MAX;
+	// Check if S has kshatot revuiot:
+	for(int i=0; i<adjLists.size(); i++)
+	{
+		for(int j=0; j<adjLists[i].size(); j++)
+		{
+			if(adjLists[i][j].getEnd() == tName)
+			{
+				flowToT += adjLists[i][j].getFlow();
+			}
+		}
+		
+	}
+
+	//// Add the edges that S outputs
+	//for(int i=0; i<p.size(); i++)
+	//{
+	//	if(p[i] == sName)
+	//	{
+	//		flowFromS += getEdgeFromGraph(sName, i).getFlow();
+	//	}
+	//}
+
+	// return max(flowFromS, flowToT);
+	return flowToT;
+}
 
 int DirectedGraph::getMinimumKibulShiuri(vector<int>& d, vector<int>& p, int t)
 {
